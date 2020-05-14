@@ -134,7 +134,7 @@ You must include them after `@livewireScripts`
 
 This will render a grid starting from 8am til 7pm inclusive with time slots of 15 minutes.
 
-![preview](https://github.com/asantibanez/livewire-dependant-select-demo/raw/master/example.png)
+![example](https://github.com/asantibanez/livewire-resource-time-grid/raw/master/example.png)
 
 By default, the component uses all the available width and height. 
 You can constrain it to use a specific set of dimensions with a wrapper element.
