@@ -139,6 +139,41 @@ This will render a grid starting from 8am til 7pm inclusive with time slots of 1
 By default, the component uses all the available width and height. 
 You can constrain it to use a specific set of dimensions with a wrapper element.
 
+## Advanced Usage
+
+### Ui customization
+You can customize the behavior of the component with the following properties when rendering on a view:
+
+- `resource-header-view` which can be any `blade.php` view that renders information of a resource. 
+This view will be injected with a `$resource` variable holding its data.
+- `event-view` which can be any `blade.php` view that will be used to render the event card. 
+This view will be injected with a `$event` variable holding its data. 
+- `resource-height` and `time-slot-height` can be used to customize the height of each resource view or time slot 
+respectively. Defaults used are `3` and `7` respectively. These will be used as `rem` values.
+- `before-grid-view` and `after-grid-view` can be any `blade.php` views that can be rendered before or after
+the grid itself. These can be used to add extra features to your component using Livewire.
+
+Example
+
+```blade
+<livewire:appointments-grid
+    starting-hour="8"
+    ending-hour="19"
+    interval="15"
+    resource-header-view="path/to/view/staring/from/views/folder"
+    event-view="path/to/view/staring/from/views/folder"
+    resource-height="4"
+    time-slot-height="8"
+    before-grid-view="path/to/view/staring/from/views/folder"
+    after-grid-view="path/to/view/staring/from/views/folder"
+/>
+```
+
+### Interaction customization
+
+// TODO
+
+
 ### Testing
 
 ``` bash
