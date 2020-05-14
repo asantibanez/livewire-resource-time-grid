@@ -1,6 +1,12 @@
-# Very short description of the package
+# Livewire Resource Time Grid
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+This package allows you to build resource/time grid to show events in a "calendar" way. You can define resources as 
+anything that owns an event, eg. a particular day, a user, a client, etc. Events loaded with the component will be then
+rendered in columns according to the resource it belongs to and the starting date of the event. 
+
+## Preview
+
+![preview](https://github.com/asantibanez/livewire-dependant-select-demo/raw/master/preview.gif)
 
 ## Installation
 
