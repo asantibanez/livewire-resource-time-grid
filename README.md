@@ -6,7 +6,7 @@ rendered in columns according to the resource it belongs to and the starting dat
 
 ## Preview
 
-![preview](https://github.com/asantibanez/livewire-dependant-select-demo/raw/master/preview.gif)
+![preview](https://github.com/asantibanez/livewire-resource-time-grid/raw/master/preview.gif)
 
 ## Installation
 
