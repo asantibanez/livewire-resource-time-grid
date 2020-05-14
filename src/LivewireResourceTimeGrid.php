@@ -56,7 +56,7 @@ class LivewireResourceTimeGrid extends Component
 
     public function isEventForResource($event, $resource)
     {
-        return true;
+        return $event['resource_id'] == $resource['id'];
     }
 
     public function timeSlotClick($resourceId, $hour, $minute)
