@@ -171,8 +171,47 @@ Example
 
 ### Interaction customization
 
-// TODO
+You can override the following methods to add interactivity to your component
 
+```php
+public function timeSlotClick($resourceId, $hour, $minute)
+{
+    // This event is triggered when a time slot is clicked.// 
+    // You'll get the resource id as well as the hour and minute
+    // clicked by the user
+}
+
+public function onEventClick($event)
+{
+    // This event will fire when an event is clicked. You will get the event that was
+    // clicked by the user
+}
+
+public function onEventDropped($eventId, $resourceId, $timeSlot, $minute)
+{
+    // This event will fire when an event is dragged and dropped into another time slot
+    // You will get the event id, the new resource id + hour + minute where it was
+    // dragged to
+}
+```
+
+You can also override how events and resources are matched instead of using a `resource_id` and `id` respectively.
+To do this, you must override the following method
+
+```php
+public function isEventForResource($event, $resource)
+{
+    // Must return true or false depending if the $resource is the owner of the $event
+}
+```
+
+The base implementation for this method is 
+
+```php
+return $event['resource_id'] == $resource['id'];
+```
+
+You can customize it as you need. 👍 
 
 ### Testing
 
