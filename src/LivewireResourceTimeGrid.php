@@ -5,6 +5,10 @@ namespace Asantibanez\LivewireResourceTimeGrid;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 
+/**
+ * Class LivewireResourceTimeGrid
+ * @package Asantibanez\LivewireResourceTimeGrid
+ */
 class LivewireResourceTimeGrid extends Component
 {
     public $resourceHeight;
@@ -14,6 +18,7 @@ class LivewireResourceTimeGrid extends Component
     public $endingHour;
     public $interval;
 
+    public $gridView;
     public $resourceHeaderView;
     public $eventView;
 
@@ -23,6 +28,7 @@ class LivewireResourceTimeGrid extends Component
     public function mount($startingHour,
                           $endingHour,
                           $interval,
+                          $gridView = null,
                           $resourceHeaderView = null,
                           $eventView = null,
                           $beforeGridView = null,
@@ -34,6 +40,7 @@ class LivewireResourceTimeGrid extends Component
         $this->endingHour = $endingHour;
         $this->interval = $interval;
 
+        $this->gridView = $gridView ?? 'livewire-resource-time-grid::grid';
         $this->resourceHeaderView = $resourceHeaderView ?? 'livewire-resource-time-grid::resource-header';
         $this->eventView = $eventView ?? 'livewire-resource-time-grid::event';
 
@@ -78,7 +85,7 @@ class LivewireResourceTimeGrid extends Component
     {
         $events = $this->events();
 
-        return view('livewire-resource-time-grid::grid')
+        return view($this->gridView)
             ->with('timeSlots', $this->timeSlots())
             ->with('resources', $this->resources())
             ->with('events', $events)

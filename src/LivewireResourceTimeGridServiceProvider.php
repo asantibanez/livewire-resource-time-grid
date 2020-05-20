@@ -13,6 +13,12 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'livewire-resource-time-grid');
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../resources/views' => $this->app->resourcePath('views/vendor/livewire-resource-time-grid'),
+            ], 'livewire-resource-time-grid');
+        }
     }
 
     /**
