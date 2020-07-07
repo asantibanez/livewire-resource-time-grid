@@ -2,25 +2,39 @@
 
 namespace Asantibanez\LivewireResourceTimeGrid;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 
 /**
  * Class LivewireResourceTimeGrid
  * @package Asantibanez\LivewireResourceTimeGrid
+ * @property string $gridView
+ * @property string $hoursColumnView
+ * @property string $hourView
+ * @property string $resourceColumnView
+ * @property string $resourceColumnHeaderView
+ * @property string $resourceColumnHourSlotView
+ * @property string $eventView
+ * @property int $hourHeightInRems
+ * @property int $resourceColumnHeaderHeightInRems
  */
 class LivewireResourceTimeGrid extends Component
 {
-    public $resourceHeight;
-    public $timeSlotHeight;
-
     public $startingHour;
     public $endingHour;
     public $interval;
 
     public $gridView;
-    public $resourceHeaderView;
+    public $hoursColumnView;
+    public $hourView;
+    public $resourceColumnView;
+    public $resourceColumnHeaderView;
+    public $resourceColumnHourSlotView;
     public $eventView;
+
+    public $hourHeightInRems;
+    public $resourceColumnHeaderHeightInRems;
 
     public $beforeGridView;
     public $afterGridView;
@@ -29,26 +43,42 @@ class LivewireResourceTimeGrid extends Component
                           $endingHour,
                           $interval,
                           $gridView = null,
-                          $resourceHeaderView = null,
+                          $hoursColumnView = null,
+                          $hourView = null,
+                          $resourceColumnView = null,
+                          $resourceColumnHeaderView = null,
+                          $resourceColumnHourSlotView = null,
                           $eventView = null,
                           $beforeGridView = null,
                           $afterGridView = null,
-                          $resourceHeight = 3,
-                          $timeSlotHeight = 7)
+                          $resourceColumnHeaderHeightInRems = 4,
+                          $hourHeightInRems = 8,
+                          $extras = null)
     {
         $this->startingHour = $startingHour;
         $this->endingHour = $endingHour;
         $this->interval = $interval;
 
         $this->gridView = $gridView ?? 'livewire-resource-time-grid::grid';
-        $this->resourceHeaderView = $resourceHeaderView ?? 'livewire-resource-time-grid::resource-header';
+        $this->hoursColumnView = $hoursColumnView ?? 'livewire-resource-time-grid::hours-column';
+        $this->hourView = $hourView ?? 'livewire-resource-time-grid::hour';
+        $this->resourceColumnView = $resourceColumnView ?? 'livewire-resource-time-grid::resource-column';
+        $this->resourceColumnHeaderView = $resourceColumnHeaderView ?? 'livewire-resource-time-grid::resource-column-header';
+        $this->resourceColumnHourSlotView = $resourceColumnHourSlotView ?? 'livewire-resource-time-grid::resource-column-hour-slot';
         $this->eventView = $eventView ?? 'livewire-resource-time-grid::event';
 
         $this->beforeGridView = $beforeGridView;
         $this->afterGridView = $afterGridView;
 
-        $this->resourceHeight = $resourceHeight;
-        $this->timeSlotHeight = $timeSlotHeight;
+        $this->hourHeightInRems = $hourHeightInRems;
+        $this->resourceColumnHeaderHeightInRems = $resourceColumnHeaderHeightInRems;
+
+        $this->afterMount($extras);
+    }
+
+    public function afterMount($extras)
+    {
+        //
     }
 
     public function resources()
@@ -66,43 +96,73 @@ class LivewireResourceTimeGrid extends Component
         return $event['resource_id'] == $resource['id'];
     }
 
-    public function timeSlotClick($resourceId, $hour, $minute)
+    public function hourSlotClick($resourceId, $hour, $slot)
     {
         //
     }
 
-    public function onEventClick($event)
+    public function onEventClick($eventId)
     {
         //
     }
 
-    public function onEventDropped($eventId, $resourceId, $timeSlot, $minute)
+    public function onEventDropped($eventId, $resourceId, $hour, $slot)
     {
         //
+    }
+
+    public function styles()
+    {
+        return [
+            'intersect' => 'border bg-blue-100',
+
+            'hourAndSlotsContainer' => 'border relative -mt-px bg-gray-100',
+
+            'hourWrapper' => 'border relative -mt-px bg-white',
+            'hour' => 'p-2 text-xs text-gray-600 flex justify-center items-center',
+
+            'resourceColumnHeader' => 'h-full text-xs flex justify-center items-center bg-blue-100',
+
+            'resourceColumnHourSlot' => 'border-b hover:bg-blue-100 cursor-pointer',
+
+            'eventWrapper' => 'absolute top-0 left-0',
+
+            'event' => 'rounded h-full flex flex-col overflow-hidden w-full shadow-lg border',
+        ];
     }
 
     public function render()
     {
         $events = $this->events();
 
+        $resources = $this->resources()
+            ->map(function ($resource) use ($events) {
+                $resource['events'] = $this->getEventsForResource($resource, $events);
+                return $resource;
+            });
+
         return view($this->gridView)
-            ->with('timeSlots', $this->timeSlots())
-            ->with('resources', $this->resources())
-            ->with('events', $events)
-            ->with('getEventsForResource', function ($resource, $events) {
-                return $this->getEventsForResource($resource, $events);
-            })
-            ->with('getEventsInTimeSlot', function ($timeSlot, $minute, $events) {
-                return $this->getEventsInTimeSlot($timeSlot, $minute, $events);
+            ->with('hoursAndSlots', $this->hoursAndSlots())
+            ->with('resources', $resources)
+            ->with('styles', $this->styles())
+            ->with('getEventsInHourSlot', function ($hour, $slot, $events) {
+                return $this->getEventsInHourSlot($hour, $slot, $events);
             })
             ->with('getEventStyles', function ($event, $events) {
                 return $this->getEventStyles($event, $events);
-            });
+            })
+            ;
     }
 
-    private function timeSlots()
+    private function hoursAndSlots()
     {
-        return range($this->startingHour, $this->endingHour);
+        return collect(range($this->startingHour, $this->endingHour))
+            ->map(function ($hour) {
+                return [
+                    'hour' => $hour,
+                    'slots' => range(0, 60 - $this->interval, $this->interval)
+                ];
+            });
     }
 
     private function getEventConflictingEvents($event, $events, $conflictingEvents) : Collection
@@ -131,7 +191,7 @@ class LivewireResourceTimeGrid extends Component
         return $events
             ->filter(function ($item) use ($event) {
                 return (
-                    $event['starts_at']->betweenIncluded($item['starts_at'], $item['ends_at'])
+                        $event['starts_at']->betweenIncluded($item['starts_at'], $item['ends_at'])
                         && $event['ends_at']->betweenIncluded($item['starts_at'], $item['ends_at'])
                     ) || (
                     $event['starts_at']->betweenExcluded($item['starts_at'], $item['ends_at'])
@@ -154,24 +214,36 @@ class LivewireResourceTimeGrid extends Component
             });
     }
 
-    private function getEventsInTimeSlot($timeSlot, $minute, Collection $events) : Collection
+    private function getEventsInHourSlot($hour, $slot, Collection $events) : Collection
     {
         return $events
-            ->filter(function ($event) use ($timeSlot, $minute) {
-                $timeSlotStartsAt = $event['starts_at']->clone()->setTime($timeSlot, $minute);
+            ->filter(function ($event) use ($hour, $slot) {
+                /** @var Carbon $eventStartsAt */
+                $eventStartsAt = $event['starts_at'];
 
-                return $event['starts_at']->isSameMinute($timeSlotStartsAt);
+                /** @var Carbon $hourSlotStartsAt */
+                $hourSlotStartsAt = $eventStartsAt->clone()
+                    ->setTime($hour, $slot);
+
+                /** @var Carbon $hourSlotEndsAt */
+                $hourSlotEndsAt = $eventStartsAt->clone()
+                    ->setTime($hour, $slot)
+                    ->addMinutes($this->interval);
+
+                return $eventStartsAt->timestamp >= $hourSlotStartsAt->timestamp
+                    && $eventStartsAt->timestamp < $hourSlotEndsAt->timestamp
+                    ;
             });
     }
 
-    private function getEventTimeSlotFraction($event)
+    private function eventHourSlotFraction($event)
     {
         return $event['starts_at']->minute / $this->interval;
     }
 
-    public function timeSlotIntervalHeight()
+    public function hourSlotIntervalHeightInRems()
     {
-        return $this->timeSlotHeight / (60/$this->interval);
+        return $this->hourHeightInRems / (60/$this->interval);
     }
 
     private function getEventStyles($event, $events)
@@ -183,9 +255,11 @@ class LivewireResourceTimeGrid extends Component
             ->values()
             ->search($event);
 
-        $marginTop = $this->getEventTimeSlotFraction($event) * $this->timeSlotIntervalHeight();
+        $marginTop = $this->eventHourSlotFraction($event) * $this->hourSlotIntervalHeightInRems();
 
-        $height = $event['starts_at']->diffInMinutes($event['ends_at']) / $this->interval * $this->timeSlotIntervalHeight();
+        $height = $event['starts_at']->diffInMinutes($event['ends_at']) / $this->interval * $this->hourSlotIntervalHeightInRems();
+
+        $height -= 0.5; // Magic fix 😅
 
         $width = $conflictingEvents->count() > 0
             ? 95 / $conflictingEvents->count()

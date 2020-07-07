@@ -29,40 +29,40 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
         Blade::directive('livewireResourceTimeGridScripts', function () {
             return <<<'HTML'
             <script>
-                function onEventDragStart(event, eventId) {
+                function onLivewireResourceTimeGridEventDragStart(event, eventId) {
                     event.dataTransfer.setData('id', eventId);
                 }
 
-                function onEventDragEnter(event, component, resourceId, timeSlot, minute) {
+                function onLivewireResourceTimeGridEventDragEnter(event, component, resourceId, hour, slot) {
                     event.stopPropagation();
                     event.preventDefault();
 
-                    let element = document.getElementById(`${component.id}-${resourceId}-${timeSlot}-${minute}`);
+                    let element = document.getElementById(`${component.id}-${resourceId}-${hour}-${slot}`);
                     element.className = element.className + ' bg-indigo-100 ';
                 }
 
-                function onEventDragLeave(event, component, resourceId, timeSlot, minute) {
+                function onLivewireResourceTimeGridEventDragLeave(event, component, resourceId, hour, slot) {
                     event.stopPropagation();
                     event.preventDefault();
 
-                    let element = document.getElementById(`${component.id}-${resourceId}-${timeSlot}-${minute}`);
+                    let element = document.getElementById(`${component.id}-${resourceId}-${hour}-${slot}`);
                     element.className = element.className.replace('bg-indigo-100', '');
                 }
 
-                function onEventDragOver(event) {
+                function onLivewireResourceTimeGridEventDragOver(event) {
                     event.stopPropagation();
                     event.preventDefault();
                 }
 
-                function onEventDrop(event, component, resourceId, timeSlot, minute) {
+                function onLivewireResourceTimeGridEventDrop(event, component, resourceId, hour, slot) {
                     event.stopPropagation();
                     event.preventDefault();
 
-                    let element = document.getElementById(`${component.id}-${resourceId}-${timeSlot}-${minute}`);
+                    let element = document.getElementById(`${component.id}-${resourceId}-${hour}-${slot}`);
                     element.className = element.className.replace('bg-indigo-100', '');
 
                     const eventId = event.dataTransfer.getData('id');
-                    component.call('onEventDropped', eventId, resourceId, timeSlot, minute);
+                    component.call('onEventDropped', eventId, resourceId, hour, slot);
                 }
             </script>
 HTML;

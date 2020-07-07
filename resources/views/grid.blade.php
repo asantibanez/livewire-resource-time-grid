@@ -1,25 +1,20 @@
 <div>
     <div>
-        @if($beforeGridView)
-            @include($beforeGridView)
-        @endif
+        @includeIf($beforeGridView)
     </div>
 
     <div class="flex">
-        @include('livewire-resource-time-grid::time-column', [
-                   'timeSlots' => $timeSlots,
-                   'interval' => $interval,
-        ])
+
+        @include($hoursColumnView, ['hoursAndSlots' => $hoursAndSlots])
+
         <div class="overflow-x-auto w-full">
             <div class="inline-block min-w-full overflow-hidden">
                 <div class="grid grid-flow-col">
                     @foreach($resources as $resource)
-                        @include('livewire-resource-time-grid::resource-column', [
-                            'timeSlots' => $timeSlots,
+                        @include($resourceColumnView, [
+                            'hoursAndSlots' => $hoursAndSlots,
                             'resource' => $resource,
                             'interval' => $interval,
-                            'events' => $getEventsForResource($resource, $events),
-                            'resourceHeaderView' => $resourceHeaderView,
                         ])
                     @endforeach
                 </div>
@@ -28,9 +23,7 @@
     </div>
 
     <div>
-        @if($afterGridView)
-            @include($afterGridView)
-        @endif
+        @includeIf($afterGridView)
     </div>
 </div>
 

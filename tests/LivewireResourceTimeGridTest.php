@@ -34,12 +34,14 @@ class LivewireResourceTimeGridTest extends TestCase
         $component->assertSet('startingHour', $startingHour);
         $component->assertSet('endingHour', $endingHour);
         $component->assertSet('interval', $interval);
-        $component->assertSet('interval', $interval);
 
-        $component->assertSet('resourceHeight', 3);
-        $component->assertSet('timeSlotHeight', 7);
+        $component->assertSet('resourceColumnHeaderHeightInRems', 4);
+        $component->assertSet('hourHeightInRems', 8);
 
-        $component->assertSet('resourceHeaderView', 'livewire-resource-time-grid::resource-header');
+        $component->assertSet('gridView', 'livewire-resource-time-grid::grid');
+        $component->assertSet('hoursColumnView', 'livewire-resource-time-grid::hours-column');
+        $component->assertSet('hourView', 'livewire-resource-time-grid::hour');
+        $component->assertSet('resourceColumnHeaderView', 'livewire-resource-time-grid::resource-column-header');
         $component->assertSet('eventView', 'livewire-resource-time-grid::event');
 
         $component->assertSet('beforeGridView', null);
