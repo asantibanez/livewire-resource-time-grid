@@ -19,12 +19,14 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
                 __DIR__.'/../resources/views' => $this->app->resourcePath('views/vendor/livewire-resource-time-grid'),
             ], 'livewire-resource-time-grid');
         }
+        
+        $this->bladeDirectives();
     }
 
     /**
      * Register the application services.
      */
-    public function register()
+    public function bladeDirectives()
     {
         Blade::directive('livewireResourceTimeGridScripts', function () {
             return <<<'HTML'
