@@ -33,19 +33,19 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
                     event.dataTransfer.setData('id', eventId);
                 }
 
-                function onLivewireResourceTimeGridEventDragEnter(event, component, resourceId, hour, slot) {
+                function onLivewireResourceTimeGridEventDragEnter(event, component, componentId, resourceId, hour, slot) {
                     event.stopPropagation();
                     event.preventDefault();
 
-                    let element = document.getElementById(`${component.id}-${resourceId}-${hour}-${slot}`);
+                    let element = document.getElementById(`${componentId}-${resourceId}-${hour}-${slot}`);
                     element.className = element.className + ' bg-indigo-100 ';
                 }
 
-                function onLivewireResourceTimeGridEventDragLeave(event, component, resourceId, hour, slot) {
+                function onLivewireResourceTimeGridEventDragLeave(event, component, componentId, resourceId, hour, slot) {
                     event.stopPropagation();
                     event.preventDefault();
 
-                    let element = document.getElementById(`${component.id}-${resourceId}-${hour}-${slot}`);
+                    let element = document.getElementById(`${componentId}-${resourceId}-${hour}-${slot}`);
                     element.className = element.className.replace('bg-indigo-100', '');
                 }
 
@@ -54,11 +54,11 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
                     event.preventDefault();
                 }
 
-                function onLivewireResourceTimeGridEventDrop(event, component, resourceId, hour, slot) {
+                function onLivewireResourceTimeGridEventDrop(event, component, componentId, resourceId, hour, slot) {
                     event.stopPropagation();
                     event.preventDefault();
 
-                    let element = document.getElementById(`${component.id}-${resourceId}-${hour}-${slot}`);
+                    let element = document.getElementById(`${componentId}-${resourceId}-${hour}-${slot}`);
                     element.className = element.className.replace('bg-indigo-100', '');
 
                     const eventId = event.dataTransfer.getData('id');
