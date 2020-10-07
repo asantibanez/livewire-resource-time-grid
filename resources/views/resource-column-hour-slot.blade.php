@@ -4,8 +4,8 @@
     style="height: {{ $hourHeightInRems / (60/$interval) }}rem;"
     id="{{ $_instance->id }}-{{ $resource['id'] }}-{{ $hour }}-{{$slot}}"
 
-    ondragenter="onLivewireResourceTimeGridEventDragEnter(event, @this, '{{ $_instance->id }}', '{{ $resource['id'] }}', {{ $hour }}, {{ $slot }});"
-    ondragleave="onLivewireResourceTimeGridEventDragLeave(event, @this, '{{ $_instance->id }}', '{{ $resource['id'] }}', {{ $hour }}, {{ $slot }});"
+    ondragenter="onLivewireResourceTimeGridEventDragEnter(event, '{{ $_instance->id }}', '{{ $resource['id'] }}', {{ $hour }}, {{ $slot }});"
+    ondragleave="onLivewireResourceTimeGridEventDragLeave(event, '{{ $_instance->id }}', '{{ $resource['id'] }}', {{ $hour }}, {{ $slot }});"
     ondragover="onLivewireResourceTimeGridEventDragOver(event);"
     ondrop="onLivewireResourceTimeGridEventDrop(event, @this, '{{ $_instance->id }}', '{{ $resource['id'] }}', {{ $hour }}, {{ $slot }});"
 
