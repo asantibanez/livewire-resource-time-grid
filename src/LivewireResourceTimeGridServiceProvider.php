@@ -45,7 +45,7 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
                     event.preventDefault();
                 }
 
-                function onLivewireResourceTimeGridEventDrop(event, component, componentId, resourceId, hour, slot) {
+                function onLivewireResourceTimeGridEventDrop(event, componentId, resourceId, hour, slot) {
                     event.stopPropagation();
                     event.preventDefault();
 
@@ -53,7 +53,7 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
                     element.className = element.className.replace('bg-indigo-100', '');
 
                     const eventId = event.dataTransfer.getData('id');
-                    component.call('onEventDropped', eventId, resourceId, hour, slot);
+                    window.livewire.components.findComponent(componentId).call('onEventDropped', eventId, resourceId, hour, slot);
                 }
             </script>
 HTML;
