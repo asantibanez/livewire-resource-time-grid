@@ -114,20 +114,25 @@ class LivewireResourceTimeGrid extends Component
     public function styles()
     {
         return [
-            'intersect' => 'border bg-blue-100',
+            'intersect' => 'border',
 
             'hourAndSlotsContainer' => 'border relative -mt-px bg-gray-100',
 
             'hourWrapper' => 'border relative -mt-px bg-white',
+
             'hour' => 'p-2 text-xs text-gray-600 flex justify-center items-center',
 
-            'resourceColumnHeader' => 'h-full text-xs flex justify-center items-center bg-blue-100',
+            'resourceColumnHeader' => 'h-full text-xs flex justify-center items-center',
 
             'resourceColumnHourSlot' => 'border-b hover:bg-blue-100 cursor-pointer',
 
             'eventWrapper' => 'absolute top-0 left-0',
 
             'event' => 'rounded h-full flex flex-col overflow-hidden w-full shadow-lg border',
+
+            'eventTitle' => 'text-xs font-medium bg-indigo-500 p-2 text-white',
+
+            'eventBody' => 'text-xs bg-white flex-1 p-2',
         ];
     }
 
