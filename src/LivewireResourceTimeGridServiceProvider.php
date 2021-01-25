@@ -7,9 +7,6 @@ use Illuminate\Support\ServiceProvider;
 
 class LivewireResourceTimeGridServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'livewire-resource-time-grid');
@@ -19,13 +16,7 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
                 __DIR__.'/../resources/views' => $this->app->resourcePath('views/vendor/livewire-resource-time-grid'),
             ], 'livewire-resource-time-grid');
         }
-    }
 
-    /**
-     * Register the application services.
-     */
-    public function register()
-    {
         Blade::directive('livewireResourceTimeGridScripts', function () {
             return <<<'HTML'
             <script>
@@ -67,5 +58,10 @@ class LivewireResourceTimeGridServiceProvider extends ServiceProvider
             </script>
 HTML;
         });
+    }
+
+    public function register()
+    {
+        //
     }
 }
