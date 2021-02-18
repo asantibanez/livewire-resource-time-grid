@@ -174,7 +174,7 @@ Example
 You can override the following methods to add interactivity to your component
 
 ```php
-public function timeSlotClick($resourceId, $hour, $minute)
+public function hourSlotClick($resourceId, $hour, $slot)
 {
     // This event is triggered when a time slot is clicked.// 
     // You'll get the resource id as well as the hour and minute
@@ -187,7 +187,7 @@ public function onEventClick($event)
     // clicked by the user
 }
 
-public function onEventDropped($eventId, $resourceId, $timeSlot, $minute)
+public function onEventDropped($eventId, $resourceId, $hour, $slot)
 {
     // This event will fire when an event is dragged and dropped into another time slot
     // You will get the event id, the new resource id + hour + minute where it was
