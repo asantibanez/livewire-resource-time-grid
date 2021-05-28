@@ -141,15 +141,15 @@ You can constrain it to use a specific set of dimensions with a wrapper element.
 
 ## Advanced Usage
 
-### Ui customization
+### UI customization
 You can customize the behavior of the component with the following properties when rendering on a view:
 
-- `resource-header-view` which can be any `blade.php` view that renders information of a resource. 
+- `resource-column-header-view` which can be any `blade.php` view that renders information of a resource. 
 This view will be injected with a `$resource` variable holding its data.
 - `event-view` which can be any `blade.php` view that will be used to render the event card. 
 This view will be injected with a `$event` variable holding its data. 
-- `resource-height` and `time-slot-height` can be used to customize the height of each resource view or time slot 
-respectively. Defaults used are `3` and `7` respectively. These will be used as `rem` values.
+- `resource-column-header-height-in-rems` and `hour-height-in-rems` can be used to customize the height of each resource view or time slot 
+respectively. Defaults used are `4` and `8` respectively. These will be used as `rem` values.
 - `before-grid-view` and `after-grid-view` can be any `blade.php` views that can be rendered before or after
 the grid itself. These can be used to add extra features to your component using Livewire.
 
@@ -160,10 +160,10 @@ Example
     starting-hour="8"
     ending-hour="19"
     interval="15"
-    resource-header-view="path/to/view/staring/from/views/folder"
+    resource-column-header-view="path/to/view/staring/from/views/folder"
     event-view="path/to/view/staring/from/views/folder"
-    resource-height="4"
-    time-slot-height="8"
+    resource-column-header-height-in-rems="4"
+    hour-height-in-rems="8"
     before-grid-view="path/to/view/staring/from/views/folder"
     after-grid-view="path/to/view/staring/from/views/folder"
 />
@@ -174,7 +174,7 @@ Example
 You can override the following methods to add interactivity to your component
 
 ```php
-public function timeSlotClick($resourceId, $hour, $minute)
+public function hourSlotClick($resourceId, $hour, $slot)
 {
     // This event is triggered when a time slot is clicked.// 
     // You'll get the resource id as well as the hour and minute
@@ -187,7 +187,7 @@ public function onEventClick($event)
     // clicked by the user
 }
 
-public function onEventDropped($eventId, $resourceId, $timeSlot, $minute)
+public function onEventDropped($eventId, $resourceId, $hour, $slot)
 {
     // This event will fire when an event is dragged and dropped into another time slot
     // You will get the event id, the new resource id + hour + minute where it was
