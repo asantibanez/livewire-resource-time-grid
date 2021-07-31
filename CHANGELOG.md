@@ -2,6 +2,10 @@
 
 All notable changes to `livewire-resource-time-grid` will be documented in this file
 
+## 1.4.0 - 2021-07-31
+
+- Upgraded dependencies
+
 ## 1.3.0 - 2021-01-25
 
 - Updated to Livewire v2
