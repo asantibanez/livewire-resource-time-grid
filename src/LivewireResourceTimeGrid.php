@@ -160,11 +160,6 @@ class LivewireResourceTimeGrid extends Component
             ;
     }
 
-    private function isMidnight(Carbon $time): bool
-    {
-        return $time->format('H:i') === '00:00';
-    }
-
     private function getCheckedEvents(): Collection
     {
         return $this->events()
@@ -175,16 +170,13 @@ class LivewireResourceTimeGrid extends Component
                                             ->setHour($event['ends_at']->format('G'))
                                             ->setMinute($event['ends_at']->format('i'));
                 }
-                if($this->isMidnight($event['ends_at'])) {
+                if($event['ends_at']->format('H:i') === '00:00') {
                     $event['ends_at']->addDays(1);
                 }
                 return $event;
             })
             ->each(function($event) {
-                if(
-                    !$this->isMidnight($event['ends_at'])
-                    && $event['ends_at']->isBefore($event['starts_at'])
-                ) {
+                if($event['ends_at']->isBefore($event['starts_at'])) {
                     throw InvalidPeriod::endBeforeStart($event['starts_at'], $event['ends_at']);
                 }
             });
