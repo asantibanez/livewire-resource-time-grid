@@ -2,6 +2,7 @@
 
 namespace Asantibanez\LivewireResourceTimeGrid;
 
+use Asantibanez\LivewireResourceTimeGrid\Exceptions\InvalidPeriod;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -138,7 +139,7 @@ class LivewireResourceTimeGrid extends Component
 
     public function render()
     {
-        $events = $this->events();
+        $events = $this->getCheckedEvents();
 
         $resources = $this->resources()
             ->map(function ($resource) use ($events) {
@@ -157,6 +158,36 @@ class LivewireResourceTimeGrid extends Component
                 return $this->getEventStyles($event, $events);
             })
             ;
+    }
+
+    private function isMidnight(Carbon $time): bool
+    {
+        return $time->format('H:i') === '00:00';
+    }
+
+    private function getCheckedEvents(): Collection
+    {
+        return $this->events()
+            ->map(function($event) {
+                if(!$event['starts_at']->isSameDay($event['ends_at'])) {
+                    $event['ends_at'] = (clone $event['starts_at'])
+                                            ->startOfDay()
+                                            ->setHour($event['ends_at']->format('G'))
+                                            ->setMinute($event['ends_at']->format('i'));
+                }
+                if($this->isMidnight($event['ends_at'])) {
+                    $event['ends_at']->addDays(1);
+                }
+                return $event;
+            })
+            ->each(function($event) {
+                if(
+                    !$this->isMidnight($event['ends_at'])
+                    && $event['ends_at']->isBefore($event['starts_at'])
+                ) {
+                    throw InvalidPeriod::endBeforeStart($event['starts_at'], $event['ends_at']);
+                }
+            });
     }
 
     private function hoursAndSlots()
@@ -193,8 +224,15 @@ class LivewireResourceTimeGrid extends Component
 
     private function getEventConflictingNeighborEvents($event, $events) : Collection
     {
+        if($this->isMidnight($event['ends_at'])) {
+            $event['ends_at'] = (clone $event['ends_at'])->subMinutes(1);
+        }
         return $events
             ->filter(function ($item) use ($event) {
+                if($this->isMidnight($item['ends_at'])) {
+                    $item['ends_at'] = (clone $item['ends_at'])->subMinutes(1);
+                }
+
                 return (
                         $event['starts_at']->betweenIncluded($item['starts_at'], $item['ends_at'])
                         && $event['ends_at']->betweenIncluded($item['starts_at'], $item['ends_at'])
