@@ -224,15 +224,8 @@ class LivewireResourceTimeGrid extends Component
 
     private function getEventConflictingNeighborEvents($event, $events) : Collection
     {
-        if($this->isMidnight($event['ends_at'])) {
-            $event['ends_at'] = (clone $event['ends_at'])->subMinutes(1);
-        }
         return $events
             ->filter(function ($item) use ($event) {
-                if($this->isMidnight($item['ends_at'])) {
-                    $item['ends_at'] = (clone $item['ends_at'])->subMinutes(1);
-                }
-
                 return (
                         $event['starts_at']->betweenIncluded($item['starts_at'], $item['ends_at'])
                         && $event['ends_at']->betweenIncluded($item['starts_at'], $item['ends_at'])
