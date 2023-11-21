@@ -2,6 +2,7 @@
 
 namespace Asantibanez\LivewireResourceTimeGrid;
 
+use Asantibanez\LivewireResourceTimeGrid\Exceptions\InvalidPeriod;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -138,7 +139,7 @@ class LivewireResourceTimeGrid extends Component
 
     public function render()
     {
-        $events = $this->events();
+        $events = $this->getCheckedEvents();
 
         $resources = $this->resources()
             ->map(function ($resource) use ($events) {
@@ -157,6 +158,28 @@ class LivewireResourceTimeGrid extends Component
                 return $this->getEventStyles($event, $events);
             })
             ;
+    }
+
+    private function getCheckedEvents(): Collection
+    {
+        return $this->events()
+            ->map(function($event) {
+                if(!$event['starts_at']->isSameDay($event['ends_at'])) {
+                    $event['ends_at'] = (clone $event['starts_at'])
+                                            ->startOfDay()
+                                            ->setHour($event['ends_at']->format('G'))
+                                            ->setMinute($event['ends_at']->format('i'));
+                }
+                if($event['ends_at']->format('H:i') === '00:00') {
+                    $event['ends_at']->addDays(1);
+                }
+                return $event;
+            })
+            ->each(function($event) {
+                if($event['ends_at']->isBefore($event['starts_at'])) {
+                    throw InvalidPeriod::endBeforeStart($event['starts_at'], $event['ends_at']);
+                }
+            });
     }
 
     private function hoursAndSlots()
