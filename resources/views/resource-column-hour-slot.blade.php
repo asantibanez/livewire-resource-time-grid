@@ -1,7 +1,6 @@
 {{-- Injected variables: $resource, $eventsInHourSlot --}}
 <div
     class="{{ $styles['resourceColumnHourSlot'] }}"
-    style="height: {{ $hourHeightInRems / (60/$interval) }}rem;"
     id="{{ $_instance->getId() }}-{{ $resource['id'] }}-{{ $hour }}-{{$slot}}"
 
     ondragenter="onLivewireResourceTimeGridEventDragEnter(event, '{{ $_instance->getId() }}', '{{ $resource['id'] }}', {{ $hour }}, {{ $slot }});"

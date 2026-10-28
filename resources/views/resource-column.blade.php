@@ -19,7 +19,7 @@
             class="{{ $styles['hourAndSlotsContainer']}}"
             style="height: {{ $hourHeightInRems }}rem"
         >
-            <div class="grid grid-cols-1 grid-rows-{{ 60/$interval }}">
+            <div class="grid grid-cols-1 h-full" style="grid-template-rows: {{ $hourAndSlots['slotGridRows'] }};">
                 @foreach($hourAndSlots['slots'] as $slot)
                     @include($resourceColumnHourSlotView, [
                         'hour' => $hourAndSlots['hour'],

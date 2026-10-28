@@ -112,7 +112,9 @@ public function events()
 
 Now, we can include our component in any view. You must specify 3 parameters, 
 `starting-hour`, `ending-hour` and `interval`. These parameters represent the times of a day the grid will render
-and how many divisions per hour it will display. (`interval` must be in minutes and less than `60`)
+and how many divisions per hour it will display. `interval` must be a positive whole
+number of minutes less than `60`; intervals need not divide evenly into an hour.
+The final slot in each hour is shortened to the remaining minutes.
 
 Example
 

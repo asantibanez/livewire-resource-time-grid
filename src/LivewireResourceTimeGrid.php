@@ -55,6 +55,11 @@ class LivewireResourceTimeGrid extends Component
                           $hourHeightInRems = 8,
                           $extras = null)
     {
+        $interval = filter_var($interval, FILTER_VALIDATE_INT);
+        if ($interval === false || $interval < 1 || $interval >= 60) {
+            throw new \InvalidArgumentException('The interval must be a positive whole number of minutes less than 60.');
+        }
+
         $this->startingHour = $startingHour;
         $this->endingHour = $endingHour;
         $this->interval = $interval;
@@ -163,9 +168,21 @@ class LivewireResourceTimeGrid extends Component
     {
         return collect(range($this->startingHour, $this->endingHour))
             ->map(function ($hour) {
+                $slots = [];
+                for ($slot = 0; $slot < 60; $slot += $this->interval) {
+                    $slots[] = $slot;
+                }
+
+                $slotGridRows = collect($slots)
+                    ->map(function ($slot) {
+                        return min($this->interval, 60 - $slot) . 'fr';
+                    })
+                    ->implode(' ');
+
                 return [
                     'hour' => $hour,
-                    'slots' => range(0, 60 - $this->interval, $this->interval)
+                    'slots' => $slots,
+                    'slotGridRows' => $slotGridRows,
                 ];
             });
     }
@@ -233,7 +250,7 @@ class LivewireResourceTimeGrid extends Component
                 /** @var Carbon $hourSlotEndsAt */
                 $hourSlotEndsAt = $eventStartsAt->clone()
                     ->setTime($hour, $slot)
-                    ->addMinutes($this->interval);
+                    ->addMinutes(min($this->interval, 60 - $slot));
 
                 return $eventStartsAt->timestamp >= $hourSlotStartsAt->timestamp
                     && $eventStartsAt->timestamp < $hourSlotEndsAt->timestamp
